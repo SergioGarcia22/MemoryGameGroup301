@@ -1,8 +1,15 @@
 package com.example.memorygamegroup301
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
 data class MemoryCard(
-    val id: Int,             // Identificador único para saber qué carta es
-    val imageResId: Int, // Aquí se guarda el ID de la imagen
-    var isFaceUp: Boolean = false,   // Verifica si boca arriba
-    var isMatched: Boolean = false   // Verifica si fue emparejada con éxito
-)
+    val id: Int,
+    val imageResId: Int
+) {
+
+    var isFaceUp by mutableStateOf(false)
+    var isMatched by mutableStateOf(false)
+
+}
