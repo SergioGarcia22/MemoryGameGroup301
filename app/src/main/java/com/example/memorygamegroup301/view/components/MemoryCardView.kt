@@ -12,40 +12,40 @@ import androidx.compose.ui.unit.dp
 import com.example.memorygamegroup301.model.MemoryCard
 
 
-//Componente reutilizable para representar una carta individual
-//@param card La carta a mostrar (datos del modelo)
-//@param onClick Acción a ejecutar cuando se hace clic en la carta
+//Reusable component to represent an individual card
+//@param card The card to display (model data)
+//@param onClick Action to execute when the card is clicked
 
-//Este componente es "stateless" (sin estado)
-     //Recibe todo lo que necesita por parámetros
-     //No mantiene estado interno
-     //Solo renderiza basado en los parámetros
+//This component is stateless
+    //It receives everything it needs as parameters
+    //It does not maintain internal state
+    //It only renders based on the parameters
 @Composable
 fun MemoryCardView(
     card: MemoryCard,
     onClick: () -> Unit
 ) {
 
-    // Box: Layout que centra su contenido
+    // Box: Layout that centers its content
     Box(
         modifier = Modifier
-            .padding(8.dp) // Margen entre cartas
-            .size(90.dp) //// Tamaño fijo 90x90 dp
-            .clickable { onClick() }, //// Hace el elemento clickeable
+            .padding(8.dp) // Margin between cards
+            .size(90.dp) //// Fixed size 90x90 dp
+            .clickable { onClick() }, //// Makes the element clickable
         contentAlignment = Alignment.Center
     ) {
 
-        // if-else: Renderizado condicional
+        // if-else: Conditional rendering
         if (card.isFaceUp || card.isMatched) {
-            // CARTA VOLTEADA: Mostramos la imagen
+            // REVERSED CARD: We show the image
             Image(
-                painter = painterResource(id = card.imageResId), // Carga la imagen
-                contentDescription = null, // // Sin descripción (decorativo)
-                modifier = Modifier.fillMaxSize() //// Ocupa todo el espacio
+                painter = painterResource(id = card.imageResId), // Load image
+                contentDescription = null, // // No description (decorative)
+                modifier = Modifier.fillMaxSize() //// It occupies all the space
             )
 
         } else {
-// CARTA BOCA ABAJO: Mostramos un ? en una tarjeta
+// FACE DOWN CARD: We show a ? on a card
             Card(
                 modifier = Modifier.fillMaxSize(),
                 colors = CardDefaults.cardColors(

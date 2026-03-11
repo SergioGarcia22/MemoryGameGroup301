@@ -7,29 +7,29 @@ import androidx.activity.viewModels
 import com.example.memorygamegroup301.view.screens.MemoryGameScreen
 import com.example.memorygamegroup301.viewmodel.GameViewModel
 
-//Actividad principal de la app
-//En MVVM, la Activity sólo configura la UI
-//Crea el ViewModel
-//Establece el contenido con Compose
-//ComponenteActivity es la version de Activity optimizada para Compose
-//viewModels: delegado que crea y mantiene el ViewModel
+//Main app activity
+//In MVVM, the Activity only configures the UI
+//Creates the ViewModel
+//Sets the content with Compose
+//ComponentActivity is the version of Activity optimized for Compose
+//viewModels: delegate that creates and maintains the ViewModel
 class MainActivity : ComponentActivity() {
 
-// viewModels() es una función delegada que:
-    // - Crea el ViewModel la primera vez
-    // - Mantiene la misma instancia durante toda la vida de la Activity
-    // - Lo destruye automáticamente cuando la Activity finaliza
+// viewModels() is a delegated function that:
+    //- Creates the ViewModel the first time
+    //- Maintains the same instance throughout the lifetime of the Activity
+    //- Automatically destroys it when the Activity ends
 
     private val viewModel: GameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // setContent: Función de Compose que establece la UI
-        // Toda la interfaz se define con funciones @Composable
+        // setContent: Compose function that sets the UI
+        // The entire interface is defined with @Composable functions
         setContent {
-            // Pasamos el ViewModel a la pantalla
-            // La pantalla observará los cambios en el ViewModel
+            // We move the ViewModel to the screen
+            // The screen will see the changes in the ViewModel
             MemoryGameScreen(viewModel = viewModel)
         }
     }

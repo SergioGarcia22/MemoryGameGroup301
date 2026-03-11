@@ -10,35 +10,35 @@ import android.os.Handler
 import android.os.Looper
 
 
-//ViewModel: Capa de lógica del juego
-// MVVM: El ViewModel actúa como puente entre el Modelo (datos) y la Vista (UI)
+//ViewModel: Game logic layer
+// MVVM: The ViewModel acts as a bridge between the Model (data) and the View (UI)
 
-//StateFlow: Observable que emite valores cuando cambia el estado
-//StateFlow: Observable que emite valores cuando cambia el estado
-//StateFlow: Versión de solo lectura (pública)
+//StateFlow: Observable that emits values when the state changes
+//StateFlow: Observable that emits values when the state changes
+//StateFlow: Read-only (public) version
 class GameViewModel : ViewModel() {
 
-  //ESTADO DE JUEGO
-    // Lista de todas las cartas
+    //GAME STATEMENT
+    // List of all cards
     private val _cards = MutableStateFlow<List<MemoryCard>>(emptyList())
     val cards: StateFlow<List<MemoryCard>> = _cards.asStateFlow()
 
-    // Contador de movimientos
+    // Move counter
     private val _moves = MutableStateFlow(0)
     val moves: StateFlow<Int> = _moves.asStateFlow()
 
-    // Estado de victoria- true cuando todas las cartas están emparejadas
+    // Victory state - true when all cards are paired
     private val _gameWon = MutableStateFlow(false)
     val gameWon: StateFlow<Boolean> = _gameWon.asStateFlow()
 
-    // Variables para controlar el juego
-    //Almacenan las cartas seleccionadas en el turno actual
+    // Variables to control the game
+    //Store the cards selected in the current turn
     private var firstSelectedCard: MemoryCard? = null
     private var secondSelectedCard: MemoryCard? = null
-    // Bandera para evitar clicks mientras se comparan cartas
+    // Flag to prevent clicks while comparing cards
     private var isProcessing = false
 
-    // IDs de las imágenes que se van usar (6 diferentes)
+    // IDs of the images to be used (6 different ones)
     private val imageIds = listOf(
         R.drawable.ic_card_1,
         R.drawable.ic_card_2,
@@ -48,118 +48,118 @@ class GameViewModel : ViewModel() {
         R.drawable.ic_card_6
     )
 
-    //Bloque init: esto se ejecuta al crear el viewmodel
-    //inicia el juego llamando a resetGame()
+    //Init block: This runs when the viewmodel is created.
+    //Starts the game by calling resetGame()
     init {
         resetGame()
     }
 
-    //Reinicia el juego con nuevas cartas aleatorias
+    //Restart the game with new random cards
     fun resetGame() {
-        // Crear pares de cartas (2 de cada imagen)
+        // Create pairs of cards (2 of each image)
         val cardList = mutableListOf<MemoryCard>()
-        var id = 0 //ID único para cada carta
+        var id = 0 //Unique ID for each card
 
-        // creamos 2 copias de cada imagen (los pares)
+        // We create 2 copies of each image (the pairs)
         repeat(2) {
 
-            //Recorremos todas las imagenes
+            //We go through all the images
             for (i in imageIds.indices) {
                 cardList.add(
                     MemoryCard(
-                        id = id++, //asignamos ID y luego incrementamos
-                        imageResId = imageIds[i] //imagen correspondiente
+                        id = id++, //we assign ID and then increment
+                        imageResId = imageIds[i] //corresponding image
                     )
                 )
             }
         }
 
-        // Mezclar las cartas
+        // Shuffle the cards
         _cards.value = cardList.shuffled()
 
-        //Reiniciamos todas las variables de estado
+        //We reset all state variables
         _moves.value = 0
-        _gameWon.value = false  // Reiniciar estado de victoria
+        _gameWon.value = false  // Reset victory state
         firstSelectedCard = null
         secondSelectedCard = null
         isProcessing = false
     }
 
-    //Maneja el evento cuando el jugador hace clic en una carta
+    //Handles the event when the player clicks on a card
     fun onCardClicked(card: MemoryCard) {
-        // No permitir clicks si ya se ganó el juego
+        // Do not allow clicks if the game has already been won
         if (_gameWon.value) return
 
-        // Verificar si podemos voltear la carta
-        if (isProcessing) return //esperando voltear la carta
-        if (card.isMatched) return //carta ya emparejada
-        if (card.isFaceUp) return //carta ya volteada
+        // Check if we can flip the card
+        if (isProcessing) return //waiting to turn the card over
+        if (card.isMatched) return //already matched card
+        if (card.isFaceUp) return //card already turned over
 
 
-        //Copiamos la lista actual modificada
+        //We copy the current modified list
         val currentCards = _cards.value.toMutableList()
-        //Buscamos el índice de la carta que se dio clic por su ID
+        //We search for the index of the letter that was clicked by its ID
         val cardIndex = currentCards.indexOfFirst { it.id == card.id }
 
-        // Voltear la carta
-        //Usamos copy() que crea una nueva instancia con los cambios
+        // Flip the card
+        //We use copy() which creates a new instance with the changes
         currentCards[cardIndex] = card.copy(isFaceUp = true)
-        _cards.value = currentCards //Actualizamos el estado
+        _cards.value = currentCards //We updated the status
 
-        // Lógica de selección
-        if (firstSelectedCard == null) { //primera carta del turno
+        // Selection logic
+        if (firstSelectedCard == null) { //first card of the turn
             firstSelectedCard = card.copy(isFaceUp = true)
-        } else if (secondSelectedCard == null) { //segunda carta del turno
+        } else if (secondSelectedCard == null) { //second card of the turn
             secondSelectedCard = card.copy(isFaceUp = true)
-            _moves.value += 1 //incrementamos movimientos
-            checkMatch() //verificamos sin son iguales
+            _moves.value += 1 //We increased movements
+            checkMatch() //we check if they are the same
         }
     }
 
-    //cuando se verifica si las dos cartas seleccionadas son iguales
-    //se ejecuta automáticamente al seleccionar la segunda carta
+    //when checking if the two selected cards are the same
+    //runs automatically when the second card is selected
     private fun checkMatch() {
-        isProcessing = true  //Bloqueamos nuevos clicks
+        isProcessing = true  //We block new clicks
 
         val first = firstSelectedCard
         val second = secondSelectedCard
 
-        //validación de seguridad (nunca deberían ser null aquí)
+        //security validation (should never be null here)
 
         if (first != null && second != null) {
-            //Comparamos por imageResId (misma imagen = misma carta)
+            //We compare by imageResId (same image = same card)
             if (first.imageResId == second.imageResId) {
-                // Son iguales, las marcamos como emparejada
+                // They are the same, we mark them as paired
                 markAsMatched(first.id, second.id)
                 clearSelection()
                 isProcessing = false
 
-                //Verificar si ya se ganó el juego
+                //Check if the game has already been won
                 checkGameWon()
             } else {
-                // Son diferentes, voltearlas después de un segundo
+                // They're different, turn them over after a second
                 Handler(Looper.getMainLooper()).postDelayed({
                     flipCardsBack(first.id, second.id)
                     clearSelection()
                     isProcessing = false
-                }, 1000) //1000 milisegundos = 1segundo
+                }, 1000) //1000 milliseconds = 1 second
             }
         }
     }
 
-    //Marca dos cartas como emparejadas (isMatched =true)
+    //Marks two cards as matched (isMatched = true)
     private fun markAsMatched(firstId: Int, secondId: Int) {
         val currentCards = _cards.value.toMutableList()
         currentCards.forEachIndexed { index, card ->
             if (card.id == firstId || card.id == secondId) {
-               //Actualizamos la carta en la lista
+                //We updated the letter in the list
                 currentCards[index] = card.copy(isMatched = true)
             }
         }
         _cards.value = currentCards
     }
 
-    //Voltea dos cartas (las oculta) después de un intento fallido
+    //Turns over two cards (hides them) after a failed attempt
     private fun flipCardsBack(firstId: Int, secondId: Int) {
         val currentCards = _cards.value.toMutableList()
         currentCards.forEachIndexed { index, card ->
@@ -170,19 +170,19 @@ class GameViewModel : ViewModel() {
         _cards.value = currentCards
     }
 
-    //limpia las cartas seleccionadas para el siguiente turno
+    //clears the selected cards for the next turn
     private fun clearSelection() {
         firstSelectedCard = null
         secondSelectedCard = null
     }
 
-    // Verificar si todas las cartas están emparejadas
-    //si es así, se actualiza el estado de victoria
+    // Check if all cards are matched
+    //If so, update the win status
     private fun checkGameWon() {
-        //all {condition} = true si todas cumplen con la condicion
+        //all {condition} = true if all meet the condition
         val allMatched = _cards.value.all { it.isMatched }
         if (allMatched) {
-            _gameWon.value = true //Jugados ganó
+            _gameWon.value = true //Player won
         }
     }
 }
