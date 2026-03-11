@@ -10,24 +10,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-//Componente que muestra un mensaje de felicitación cuando el jugador gana
-//@param onPlayAgain Acción para jugar de nuevo (reiniciar)
-//El overlay se superpone al tablero con un fondo semitransparente
+//Component that displays a congratulatory message when the player wins
+//@param onPlayAgain Action to play again (reset)
+//The overlay overlaps the board with a semi-transparent background
 
 @Composable
 fun VictoryOverlay(
     onPlayAgain: () -> Unit,
-    buttonColor: Color = Color(0xFF9C27B0)  // Color morado personalizado
+    buttonColor: Color = Color(0xFF9C27B0)  // Custom purple color
 
 ) {
-    // Box que cubre toda la pantalla
+    // Box that covers the entire screen
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.7f)), // Fondo negro semitransparente
-        contentAlignment = Alignment.Center // Centra el contenido
+            .background(Color.Black.copy(alpha = 0.7f)), // Semi-transparent black background
+        contentAlignment = Alignment.Center // Center the content
     ) {
-        // Tarjeta blanca para el mensaje
+        // White card for message
         Card(
             modifier = Modifier
                 .padding(32.dp)
@@ -36,7 +36,7 @@ fun VictoryOverlay(
                 containerColor = Color.White
             )
         ) {
-            // Columna con todos los elementos del mensaje
+            // Column with all the message elements
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(24.dp)
@@ -65,9 +65,9 @@ fun VictoryOverlay(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                //BOTÓN DE JUGAR DE NUEVO
+                //PLAY AGAIN BUTTON
                 Button(
-                    onClick = onPlayAgain, // Acción para reiniciar
+                    onClick = onPlayAgain, // Action to restart
                     modifier = Modifier.fillMaxWidth(0.8f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = buttonColor
