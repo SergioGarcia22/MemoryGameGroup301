@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.memorygamegroup301.model.MemoryCard
+import com.example.memorygamegroup301.R
 
 
 //Componente reutilizable para representar una carta individual
@@ -45,22 +46,12 @@ fun MemoryCardView(
             )
 
         } else {
-// CARTA BOCA ABAJO: Mostramos un ? en una tarjeta
-            Card(
-                modifier = Modifier.fillMaxSize(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "?",
-                        style = MaterialTheme.typography.headlineLarge
-                    )
-                }
-            }
+// CARTA BOCA ABAJO: Mostramos un la imagen card_back en una tarjeta
+            Image(
+                painter = painterResource(id = R.drawable.card_back),
+                contentDescription = "Card Back",
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

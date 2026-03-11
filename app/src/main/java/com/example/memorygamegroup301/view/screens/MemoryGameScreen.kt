@@ -10,12 +10,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.memorygamegroup301.components.MemoryCardView
 import com.example.memorygamegroup301.components.VictoryOverlay
 import com.example.memorygamegroup301.viewmodel.GameViewModel
-
+import com.example.memorygamegroup301.R
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
 
 //PANTALLA PRINCIPAL DEL JUEGO
 
@@ -35,6 +38,13 @@ fun MemoryGameScreen(viewModel: GameViewModel) { // Observamos los estados del V
 
     // Box: Layout que puede mostrar el mensaje encima del tablero
     Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.background),
+            contentDescription = "background",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
